@@ -36,10 +36,6 @@ public class FlightSummaryDTO {
      */
     private int numSeatsAvailable;
     /**
-     * This is the sortCriteria
-     */
-    private String sortCriteria;
-    /**
      * This is the duration of the flight
      */
     private Long duration;

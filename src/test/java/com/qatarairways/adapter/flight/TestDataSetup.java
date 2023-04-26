@@ -113,7 +113,6 @@ public class TestDataSetup {
                 .cancellationPossible(isCancellable)
                 .duration((long) (arrivalAt.getSecond() - departureAt.getSecond()))
                 .numSeatsAvailable(numSeatsAvailable)
-                .sortCriteria(sortCriteria)
                 .build();
     }
 }
