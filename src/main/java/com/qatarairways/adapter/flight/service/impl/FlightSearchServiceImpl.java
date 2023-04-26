@@ -9,7 +9,6 @@ import com.qatarairways.adapter.flight.service.FlightSearchService;
 import com.qatarairways.adapter.flight.service.helper.FlightSearchServiceHelper;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 import static com.qatarairways.adapter.flight.mapper.FlightRequestMapper.toFlightAvailabilityRequest;
 import static com.qatarairways.adapter.flight.mapper.FlightSummaryMapper.toFlightDTO;
