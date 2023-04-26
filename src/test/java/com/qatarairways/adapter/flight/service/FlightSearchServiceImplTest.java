@@ -54,16 +54,15 @@ public class FlightSearchServiceImplTest extends TestDataSetup {
         FlightSummaryDTO flight1 = createFlightDTO("Flight1", LocalDateTime.now(), LocalDateTime.now().plusHours(3), 100f, true, 5L, 2,"price");
         FlightSummaryDTO flight2 = createFlightDTO("Flight2", LocalDateTime.now(), LocalDateTime.now().plusHours(3), 300f, false, 5L, 2, "price");
         FlightSummaryDTO flight3 = createFlightDTO("Flight3", LocalDateTime.now(), LocalDateTime.now().plusHours(3), 200f, true, 5L, 2, "price");
-        Collection<FlightSummaryDTO> flights = Arrays.asList(flight1, flight2, flight3);
-
+        Collection flights = Arrays.asList(flight1, flight2, flight3);
+        Collection response = Arrays.asList("Flight1","Flight2","Flight3");
         // when
         when(availabilityService.getAvailableFlights(availabilityRequest)).thenReturn(availableFlights);
-        when(flightSearchServiceHelper.filterResponse(any(), any())).thenReturn(flights);
-        when(flightSearchServiceHelper.sortFlights(flights,request.getSortCriteria())).thenReturn(flights);
-        when(flightSearchServiceHelper.limitFlightList(request.getLimit(),flights)).thenReturn(flights);
+        when(flightSearchServiceHelper.sortFlights(any(),any())).thenReturn(flights);
+        when(flightSearchServiceHelper.filterAndLimitResponse(any(),any())).thenReturn(response);
 
         // call the method
-        Collection<String> airlines = flightSearchService.searchFlights(request);
+        Collection airlines = flightSearchService.searchFlights(request);
 
         // then
         assertThat(airlines).hasSize(3);

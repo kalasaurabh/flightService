@@ -20,37 +20,31 @@ public class FlightSearchServiceHelper {
 
     /**
      * Filters the response based on cancellation and max price.
-     *
+     * Sets the limit of response to default if not provided
      * @param flightSummaryDTOS      the collection of flight summary
      * @param flightSearchRequestDTO the flight search request object
      * @return the collection of filtered FlightSummaryDTO
      */
-    public Collection<FlightSummaryDTO> filterResponse(Collection<FlightSummaryDTO> flightSummaryDTOS,
+    public Collection<String> filterAndLimitResponse(Collection<FlightSummaryDTO> flightSummaryDTOS,
                                                        FlightSearchRequestDTO flightSearchRequestDTO) {
+        int limit = getLimit(flightSearchRequestDTO);
+        Collection<String> filteredFlights = null;
         if (flightSearchRequestDTO.isCancellationPossible()) {
-            flightSummaryDTOS = flightSummaryDTOS.stream().filter(FlightSummaryDTO::isCancellationPossible)
+            filteredFlights = flightSummaryDTOS.stream().filter(FlightSummaryDTO::isCancellationPossible)
+                    .map(FlightSummaryDTO::getAirlineCode).limit(limit)
                     .collect(Collectors.toList());
         }
         Optional<Float> maxPrice = Optional.ofNullable(flightSearchRequestDTO.getMaxPrice());
         if (maxPrice.isPresent() && maxPrice.get() != 0) {
-            flightSummaryDTOS = flightSummaryDTOS.stream().filter(flight -> flight.getAveragePriceInUsd()
-                    .compareTo(maxPrice.get()) < 0).collect(Collectors.toList());
+            filteredFlights = flightSummaryDTOS.stream().filter(flight -> flight.getAveragePriceInUsd()
+                    .compareTo(maxPrice.get()) < 0).map(FlightSummaryDTO::getAirlineCode)
+                    .limit(limit).collect(Collectors.toList());
         }
-        return flightSummaryDTOS;
-    }
-
-    /**
-     * Limits the response based on the input provided
-     *
-     * @param limit
-     * @param flights
-     * @return
-     */
-    public Collection<FlightSummaryDTO> limitFlightList(Integer limit, Collection<FlightSummaryDTO> flights) {
-        if (limit == null) {
-            limit = DEFAULT_LIMIT;
+        if (filteredFlights == null) {
+            filteredFlights = flightSummaryDTOS.stream().map(FlightSummaryDTO::getAirlineCode).limit(limit)
+                    .collect(Collectors.toList());
         }
-        return flights.stream().limit(limit).collect(Collectors.toList());
+        return filteredFlights;
     }
 
     /**
@@ -63,7 +57,7 @@ public class FlightSearchServiceHelper {
     public Collection<FlightSummaryDTO> sortFlights(Collection<FlightSummaryDTO> flights, String sortCriteria) {
         Comparator<FlightSummaryDTO> comparator = getComparator(sortCriteria);
         if (ObjectUtils.isNotEmpty(comparator)) {
-            flights = flights.stream().sorted(comparator).collect(Collectors.toList());
+            flights = (Collection) flights.stream().sorted(comparator).collect(Collectors.toList());
         }
         return flights;
     }
@@ -77,4 +71,10 @@ public class FlightSearchServiceHelper {
         }
         return comparator;
     }
+
+    private Integer getLimit(FlightSearchRequestDTO flightSearchRequestDTO) {
+        Integer limit = flightSearchRequestDTO.getLimit();
+        return limit != null && limit != 0 ? limit : DEFAULT_LIMIT;
+    }
+
 }

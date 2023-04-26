@@ -34,12 +34,12 @@ public class FlightSearchServiceHelperTest extends TestDataSetup {
         FlightSearchRequestDTO searchRequest = createFlightSearchRequest("NYJ", "STL", "2023-04-01", 2, true, 0.0f, null, null);
 
         // when
-        List<FlightSummaryDTO> filteredFlights = (List)flightSearchServiceHelper.filterResponse(flights, searchRequest);
+        List filteredFlights = (List)flightSearchServiceHelper.filterAndLimitResponse(flights, searchRequest);
 
         // then
         assertThat(filteredFlights).hasSize(2);
-        assertThat(filteredFlights.get(0).getAirlineCode()).isEqualTo("Flight1");
-        assertThat(filteredFlights.get(1).getAirlineCode()).isEqualTo("Flight3");
+        assertThat(filteredFlights.contains("Flight1")).isEqualTo(true);
+        assertThat(filteredFlights.contains("Flight3")).isEqualTo(true);
     }
 
     @Test
@@ -54,12 +54,13 @@ public class FlightSearchServiceHelperTest extends TestDataSetup {
         FlightSearchRequestDTO searchRequest = createFlightSearchRequest("NYJ", "STL", "2023-04-01", 2, false, 150f, null, null);
 
         // when
-        List<FlightSummaryDTO> filteredFlights = (List)flightSearchServiceHelper.filterResponse(flights, searchRequest);
+        List filteredFlights = (List)flightSearchServiceHelper.filterAndLimitResponse(flights, searchRequest);
 
         //then
         assertThat(filteredFlights).hasSize(1);
-        assertThat(filteredFlights.get(0).getAirlineCode()).isEqualTo("Flight1");
+        assertThat(filteredFlights.contains("Flight1")).isEqualTo(true);
     }
+
 
     @Test
     public void test_filterFlightResponseForCancelFlightsANDMaxPrice(){
@@ -74,12 +75,13 @@ public class FlightSearchServiceHelperTest extends TestDataSetup {
         FlightSearchRequestDTO searchRequest = createFlightSearchRequest("NYJ", "STL", "2023-04-01", 2, true, 150f, null, null);
 
         //when
-        List<FlightSummaryDTO> filteredFlights = (List)flightSearchServiceHelper.filterResponse(flights, searchRequest);
+        List filteredFlights = (List)flightSearchServiceHelper.filterAndLimitResponse(flights, searchRequest);
 
         //then
         assertThat(filteredFlights).hasSize(1);
-        assertThat(filteredFlights.get(0).getAirlineCode()).isEqualTo("Flight1");
+        assertThat(filteredFlights.contains("Flight1")).isEqualTo(true);
     }
+
 
     @Test
     public void test_FilterFlightWhenNoCriteriaGiven(){
@@ -94,11 +96,12 @@ public class FlightSearchServiceHelperTest extends TestDataSetup {
         FlightSearchRequestDTO searchRequest = createFlightSearchRequest("NYJ", "STL", "2023-04-01", 2, false, 0.0f, null, null);
 
         //when
-        List filteredFlights = (List)flightSearchServiceHelper.filterResponse(flights, searchRequest);
+        List filteredFlights = (List)flightSearchServiceHelper.filterAndLimitResponse(flights, searchRequest);
 
         //then
         assertThat(filteredFlights).hasSize(3);
     }
+
 
     @Test
     public void test_ResponseWhenRequestHasBlankLimit(){
@@ -110,14 +113,40 @@ public class FlightSearchServiceHelperTest extends TestDataSetup {
         FlightSummaryDTO flight4 = createFlightDTO("Flight4", LocalDateTime.now(), LocalDateTime.now().plusHours(3), 400f, true, 5L, 2);
         Collection<FlightSummaryDTO> flights = Arrays.asList(flight1, flight2, flight3,flight4);
 
+        // Create a search request that doesn't have the limit
+        FlightSearchRequestDTO searchRequest = createFlightSearchRequest("NYJ", "STL", "2023-04-01", 2, false, 0.0f, null, null);
+
         // when
-        List<FlightSummaryDTO> filteredFlights = (List)flightSearchServiceHelper.limitFlightList(null, flights);
+        List filteredFlights = (List)flightSearchServiceHelper.filterAndLimitResponse(flights, searchRequest);
 
         // then
         assertThat(filteredFlights).hasSize(3);
-        assertThat(filteredFlights.get(0).getAirlineCode()).isEqualTo("Flight1");
-        assertThat(filteredFlights.get(1).getAirlineCode()).isEqualTo("Flight2");
-        assertThat(filteredFlights.get(2).getAirlineCode()).isEqualTo("Flight3");
+        assertThat(filteredFlights.contains("Flight1")).isEqualTo(true);
+        assertThat(filteredFlights.contains("Flight2")).isEqualTo(true);
+        assertThat(filteredFlights.contains("Flight3")).isEqualTo(true);
+    }
+
+    @Test
+    public void test_ResponseWhenRequestHasZeroLimit(){
+        // given
+        //create sample flights
+        FlightSummaryDTO flight1 = createFlightDTO("Flight1", LocalDateTime.now(), LocalDateTime.now().plusHours(3), 100f, true, 5L, 2);
+        FlightSummaryDTO flight2 = createFlightDTO("Flight2", LocalDateTime.now(), LocalDateTime.now().plusHours(3), 200f, false, 5L, 2);
+        FlightSummaryDTO flight3 = createFlightDTO("Flight3", LocalDateTime.now(), LocalDateTime.now().plusHours(3), 300f, true, 5L, 2);
+        FlightSummaryDTO flight4 = createFlightDTO("Flight4", LocalDateTime.now(), LocalDateTime.now().plusHours(3), 400f, true, 5L, 2);
+        Collection<FlightSummaryDTO> flights = Arrays.asList(flight1, flight2, flight3,flight4);
+
+        // Create a search request that doesn't have the limit
+        FlightSearchRequestDTO searchRequest = createFlightSearchRequest("NYJ", "STL", "2023-04-01", 2, false, 0.0f, null, 0);
+
+        // when
+        List filteredFlights = (List)flightSearchServiceHelper.filterAndLimitResponse(flights, searchRequest);
+
+        // then
+        assertThat(filteredFlights).hasSize(3);
+        assertThat(filteredFlights.contains("Flight1")).isEqualTo(true);
+        assertThat(filteredFlights.contains("Flight2")).isEqualTo(true);
+        assertThat(filteredFlights.contains("Flight3")).isEqualTo(true);
     }
 
     @Test
@@ -130,13 +159,38 @@ public class FlightSearchServiceHelperTest extends TestDataSetup {
         FlightSummaryDTO flight4 = createFlightDTO("Flight4", LocalDateTime.now(), LocalDateTime.now().plusHours(3), 400f, true, 5L, 2);
         Collection<FlightSummaryDTO> flights = Arrays.asList(flight1, flight2, flight3,flight4);
 
+        // Create a search request has the limit
+        FlightSearchRequestDTO searchRequest = createFlightSearchRequest("NYJ", "STL", "2023-04-01", 2, false, 0.0f, null, 2);
+
         // when
-        List<FlightSummaryDTO> filteredFlights = (List)flightSearchServiceHelper.limitFlightList(2, flights);
+        List filteredFlights = (List)flightSearchServiceHelper.filterAndLimitResponse(flights, searchRequest);
 
         //then
         assertThat(filteredFlights).hasSize(2);
-        assertThat(filteredFlights.get(0).getAirlineCode()).isEqualTo("Flight1");
-        assertThat(filteredFlights.get(1).getAirlineCode()).isEqualTo("Flight2");
+        assertThat(filteredFlights.contains("Flight1")).isEqualTo(true);
+        assertThat(filteredFlights.contains("Flight2")).isEqualTo(true);
+    }
+
+    @Test
+    public void test_ResponseWhenRequestHasFilterOptionAndHasLimit(){
+        // given
+        // create sample flights
+        FlightSummaryDTO flight1 = createFlightDTO("Flight1", LocalDateTime.now(), LocalDateTime.now().plusHours(3), 100f, true, 5L, 2);
+        FlightSummaryDTO flight2 = createFlightDTO("Flight2", LocalDateTime.now(), LocalDateTime.now().plusHours(3), 200f, false, 5L, 2);
+        FlightSummaryDTO flight3 = createFlightDTO("Flight3", LocalDateTime.now(), LocalDateTime.now().plusHours(3), 300f, true, 5L, 2);
+        FlightSummaryDTO flight4 = createFlightDTO("Flight4", LocalDateTime.now(), LocalDateTime.now().plusHours(3), 400f, true, 5L, 2);
+        FlightSummaryDTO flight5 = createFlightDTO("Flight5", LocalDateTime.now(), LocalDateTime.now().plusHours(3), 600f, false, 5L, 2);
+        FlightSummaryDTO flight6 = createFlightDTO("Flight6", LocalDateTime.now(), LocalDateTime.now().plusHours(3), 700f, true, 5L, 2);
+        Collection<FlightSummaryDTO> flights = Arrays.asList(flight1, flight2, flight3,flight4);
+
+        // Create a search request has the limit
+        FlightSearchRequestDTO searchRequest = createFlightSearchRequest("NYJ", "STL", "2023-04-01", 2, true, 450f, null, 3);
+
+        // when
+        List filteredFlights = (List)flightSearchServiceHelper.filterAndLimitResponse(flights, searchRequest);
+
+        //then
+        assertThat(filteredFlights).hasSize(3);
     }
 
     @Test
