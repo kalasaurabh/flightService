@@ -37,7 +37,7 @@ public class FlightSearchServiceImplTest extends TestDataSetup {
     private FlightUtils flightUtil;
 
     @Test
-    public void test_sortTheListBasedOnSortCriteria(){
+    public void test_verifyTheCorrectResponseIsGenerated(){
 
         // given
 
