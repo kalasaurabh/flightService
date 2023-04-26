@@ -9,6 +9,8 @@ import com.qatarairways.adapter.flight.service.FlightSearchService;
 import com.qatarairways.adapter.flight.util.FlightUtils;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
+
 import static com.qatarairways.adapter.flight.mapper.FlightRequestMapper.toFlightAvailabilityRequest;
 import static com.qatarairways.adapter.flight.mapper.FlightSummaryMapper.toFlightDTO;
 
@@ -28,19 +30,20 @@ public class FlightSearchServiceImpl implements FlightSearchService {
      * a filter operation based on the filter criteria
      */
     @Override
-    public Collection<FlightSummaryDTO> searchFlights(FlightSearchRequestDTO flightSearchRequestDTO) {
+    public Collection<String> searchFlights(FlightSearchRequestDTO flightSearchRequestDTO) {
 
         // converts the request object to the object of external face
-        FlightAvailabilityRequest request =  toFlightAvailabilityRequest(flightSearchRequestDTO);
+        FlightAvailabilityRequest request = toFlightAvailabilityRequest(flightSearchRequestDTO);
 
         // calls the external service for loading the summary of the flights
         Collection<FlightSummary> flights = flightAvailabilityService.getAvailableFlights(request);
 
-        Collection<FlightSummaryDTO> flightDTOS = flightUtil.filterResponse(toFlightDTO(flights),flightSearchRequestDTO);
+        Collection<FlightSummaryDTO> flightSummaryDTOS = flightUtil.filterResponse(toFlightDTO(flights), flightSearchRequestDTO);
 
         // sorts the collection based on the sortcriteria
-        flightUtil.sortFlights(flightDTOS, flightSearchRequestDTO.getSortCriteria());
-        return flightUtil.getLimitedFlightList(flightSearchRequestDTO.getLimit(), flightDTOS);
+        flightUtil.sortFlights(flightSummaryDTOS, flightSearchRequestDTO.getSortCriteria());
+        flightSummaryDTOS = flightUtil.getLimitedFlightList(flightSearchRequestDTO.getLimit(), flightSummaryDTOS);
+        return flightSummaryDTOS.stream().map(FlightSummaryDTO::getAirlineCode).collect(Collectors.toList());
     }
 
 

@@ -38,7 +38,7 @@ public class FlightUtilsTest extends TestDataSetup {
         List<FlightSummaryDTO> filteredFlights = (List)flightUtils.filterResponse(flights, searchRequest);
 
         // then
-        assertThat(filteredFlights.size()).isEqualTo(2);
+        assertThat(filteredFlights).hasSize(2);
         assertThat(filteredFlights.get(0).getAirlineCode()).isEqualTo("Flight1");
         assertThat(filteredFlights.get(1).getAirlineCode()).isEqualTo("Flight3");
     }
@@ -58,8 +58,8 @@ public class FlightUtilsTest extends TestDataSetup {
         List<FlightSummaryDTO> filteredFlights = (List)flightUtils.filterResponse(flights, searchRequest);
 
         //then
-        assertThat(filteredFlights.size()).isEqualTo(1);
-        assertThat(filteredFlights.get(0).getAirlineCode()).isEqualTo("Flight2");
+        assertThat(filteredFlights).hasSize(1);
+        assertThat(filteredFlights.get(0).getAirlineCode()).isEqualTo("Flight1");
     }
 
     @Test
@@ -78,8 +78,27 @@ public class FlightUtilsTest extends TestDataSetup {
         List<FlightSummaryDTO> filteredFlights = (List)flightUtils.filterResponse(flights, searchRequest);
 
         //then
-        assertThat(filteredFlights.size()).isEqualTo(1);
-        assertThat(filteredFlights.get(0).getAirlineCode()).isEqualTo("Flight3");
+        assertThat(filteredFlights).hasSize(1);
+        assertThat(filteredFlights.get(0).getAirlineCode()).isEqualTo("Flight1");
+    }
+
+    @Test
+    public void test_FilterFlightWhenNoCriteriaGiven(){
+        // given
+        // Create some sample flights
+        FlightSummaryDTO flight1 = createFlightDTO("Flight1", LocalDateTime.now(), LocalDateTime.now().plusHours(3), 100f, true, 5L, 2);
+        FlightSummaryDTO flight2 = createFlightDTO("Flight2", LocalDateTime.now(), LocalDateTime.now().plusHours(3), 200f, false, 5L, 2);
+        FlightSummaryDTO flight3 = createFlightDTO("Flight3", LocalDateTime.now(), LocalDateTime.now().plusHours(3), 300f, true, 5L, 2);
+        Collection<FlightSummaryDTO> flights = Arrays.asList(flight1, flight2, flight3);
+
+        // Create a search request that includes both cancellable flights and a maximum average price
+        FlightSearchRequestDTO searchRequest = createFlightSearchRequest("NYJ", "STL", "2023-04-01", 2, false, 0.0f, null, null);
+
+        //when
+        List filteredFlights = (List)flightUtils.filterResponse(flights, searchRequest);
+
+        //then
+        assertThat(filteredFlights).hasSize(3);
     }
 
     @Test
@@ -96,7 +115,7 @@ public class FlightUtilsTest extends TestDataSetup {
         List<FlightSummaryDTO> filteredFlights = (List)flightUtils.getLimitedFlightList(null, flights);
 
         // then
-        assertThat(filteredFlights.size()).isEqualTo(3);
+        assertThat(filteredFlights).hasSize(3);
         assertThat(filteredFlights.get(0).getAirlineCode()).isEqualTo("Flight1");
         assertThat(filteredFlights.get(1).getAirlineCode()).isEqualTo("Flight2");
         assertThat(filteredFlights.get(2).getAirlineCode()).isEqualTo("Flight3");
@@ -116,7 +135,7 @@ public class FlightUtilsTest extends TestDataSetup {
         List<FlightSummaryDTO> filteredFlights = (List)flightUtils.getLimitedFlightList(2, flights);
 
         //then
-        assertThat(filteredFlights.size()).isEqualTo(2);
+        assertThat(filteredFlights).hasSize(2);
         assertThat(filteredFlights.get(0).getAirlineCode()).isEqualTo("Flight1");
         assertThat(filteredFlights.get(1).getAirlineCode()).isEqualTo("Flight2");
     }

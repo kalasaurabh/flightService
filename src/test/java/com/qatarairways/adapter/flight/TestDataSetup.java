@@ -74,7 +74,6 @@ public class TestDataSetup {
      * @param numSeatsAvailable
      * @return
      */
-    @SneakyThrows
     public static FlightSummaryDTO createFlightDTO(String airlineCode, LocalDateTime departureAt,
                                                    LocalDateTime arrivalAt, Float averagePriceInUsd,
                                                        boolean isCancellable, Long duration,
@@ -102,7 +101,6 @@ public class TestDataSetup {
      * @param sortCriteria
      * @return
      */
-    @SneakyThrows
     public static FlightSummaryDTO createFlightDTO(String airlineCode, LocalDateTime departureAt,
                                                    LocalDateTime arrivalAt, Float averagePriceInUsd,
                                                    boolean isCancellable, Long duration,

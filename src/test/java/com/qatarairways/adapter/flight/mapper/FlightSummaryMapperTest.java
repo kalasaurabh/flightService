@@ -26,7 +26,7 @@ public class FlightSummaryMapperTest extends TestDataSetup {
         // when
         List<FlightSummaryDTO> result = (List)FlightSummaryMapper.toFlightDTO(flights);
         // then
-        assertThat(result.size()).isEqualTo(2);
+        assertThat(result).hasSize(2);
         assertThat(result.get(0).getAirlineCode()).isEqualTo("KF");
         assertThat(result.get(0).getAveragePriceInUsd()).isEqualTo(200f);
         assertThat(result.get(0).isCancellationPossible()).isEqualTo(true);

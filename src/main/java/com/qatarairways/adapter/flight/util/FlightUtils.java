@@ -30,9 +30,9 @@ public class FlightUtils {
                     .collect(Collectors.toList());
         }
         Optional<Float> maxPrice = Optional.ofNullable(flightSearchRequestDTO.getMaxPrice());
-        if (maxPrice.isPresent()) {
+        if (maxPrice.isPresent() && maxPrice.get() != 0) {
             flightSummaryDTOS = flightSummaryDTOS.stream().filter(flight -> flight.getAveragePriceInUsd()
-                    .compareTo(maxPrice.get()) > 0).collect(Collectors.toList());
+                    .compareTo(maxPrice.get()) < 0).collect(Collectors.toList());
         }
         return flightSummaryDTOS;
     }
@@ -64,7 +64,7 @@ public class FlightUtils {
         return flights;
     }
 
-    private Comparator getComparator(String sortCriteria) {
+    private Comparator<FlightSummaryDTO> getComparator(String sortCriteria) {
         Comparator<FlightSummaryDTO> comparator = null;
         if (DURATION.equalsIgnoreCase(sortCriteria)) {
             comparator = Comparator.comparingLong(FlightSummaryDTO::getDuration);

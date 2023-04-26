@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class FlightRequestMapperTest extends TestDataSetup {
 
     @Test
-    public void testFlightAvailibility_ReturnsGivenObject() {
+    public void testFlightAvailability_ReturnsGivenObject() {
         // given
         FlightSearchRequestDTO searchRequest = createFlightSearchRequest("NYC", "STL", "2020-03-20", 20, true, 1f, "price", 3);
 

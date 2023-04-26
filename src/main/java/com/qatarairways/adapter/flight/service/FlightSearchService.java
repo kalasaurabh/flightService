@@ -7,5 +7,5 @@ import java.util.Collection;
 
 public interface FlightSearchService {
 
-    Collection<FlightSummaryDTO> searchFlights(FlightSearchRequestDTO flightSearchRequestDTO);
+    Collection<String> searchFlights(FlightSearchRequestDTO flightSearchRequestDTO);
 }
