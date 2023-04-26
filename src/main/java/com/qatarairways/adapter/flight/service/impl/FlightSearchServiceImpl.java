@@ -6,7 +6,7 @@ import com.qatarairways.adapter.flight.FlightSummary;
 import com.qatarairways.adapter.flight.dto.FlightSearchRequestDTO;
 import com.qatarairways.adapter.flight.dto.FlightSummaryDTO;
 import com.qatarairways.adapter.flight.service.FlightSearchService;
-import com.qatarairways.adapter.flight.util.FlightUtils;
+import com.qatarairways.adapter.flight.service.helper.FlightSearchServiceHelper;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -18,11 +18,12 @@ public class FlightSearchServiceImpl implements FlightSearchService {
 
     private final FlightAvailabilityService flightAvailabilityService;
 
-    private final FlightUtils flightUtil;
+    private final FlightSearchServiceHelper flightSearchServiceHelper;
 
-    public FlightSearchServiceImpl(FlightAvailabilityService flightAvailabilityService, FlightUtils flightUtil) {
+    public FlightSearchServiceImpl(FlightAvailabilityService flightAvailabilityService,
+                                   FlightSearchServiceHelper flightSearchServiceHelper) {
         this.flightAvailabilityService = flightAvailabilityService;
-        this.flightUtil = flightUtil;
+        this.flightSearchServiceHelper = flightSearchServiceHelper;
     }
 
     /**
@@ -38,11 +39,12 @@ public class FlightSearchServiceImpl implements FlightSearchService {
         // calls the external service for loading the summary of the flights
         Collection<FlightSummary> flights = flightAvailabilityService.getAvailableFlights(request);
 
-        Collection<FlightSummaryDTO> flightSummaryDTOS = flightUtil.filterResponse(toFlightDTO(flights), flightSearchRequestDTO);
+        Collection<FlightSummaryDTO> flightSummaryDTOS = flightSearchServiceHelper.filterResponse(toFlightDTO(flights),
+                flightSearchRequestDTO);
 
         // sorts the collection based on the sortcriteria
-        flightUtil.sortFlights(flightSummaryDTOS, flightSearchRequestDTO.getSortCriteria());
-        flightSummaryDTOS = flightUtil.getLimitedFlightList(flightSearchRequestDTO.getLimit(), flightSummaryDTOS);
+        flightSearchServiceHelper.sortFlights(flightSummaryDTOS, flightSearchRequestDTO.getSortCriteria());
+        flightSummaryDTOS = flightSearchServiceHelper.getLimitedFlightList(flightSearchRequestDTO.getLimit(), flightSummaryDTOS);
         return flightSummaryDTOS.stream().map(FlightSummaryDTO::getAirlineCode).collect(Collectors.toList());
     }
 

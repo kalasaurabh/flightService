@@ -7,8 +7,8 @@ import com.qatarairways.adapter.flight.TestDataSetup;
 import com.qatarairways.adapter.flight.dto.FlightSearchRequestDTO;
 import com.qatarairways.adapter.flight.dto.FlightSummaryDTO;
 import com.qatarairways.adapter.flight.mapper.FlightRequestMapper;
+import com.qatarairways.adapter.flight.service.helper.FlightSearchServiceHelper;
 import com.qatarairways.adapter.flight.service.impl.FlightSearchServiceImpl;
-import com.qatarairways.adapter.flight.util.FlightUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -34,7 +34,7 @@ public class FlightSearchServiceImplTest extends TestDataSetup {
     private FlightAvailabilityService availabilityService;
 
     @Mock
-    private FlightUtils flightUtil;
+    private FlightSearchServiceHelper flightSearchServiceHelper;
 
     @Test
     public void test_verifyTheCorrectResponseIsGenerated(){
@@ -58,9 +58,9 @@ public class FlightSearchServiceImplTest extends TestDataSetup {
 
         // when
         when(availabilityService.getAvailableFlights(availabilityRequest)).thenReturn(availableFlights);
-        when(flightUtil.filterResponse(any(), any())).thenReturn(flights);
-        when(flightUtil.sortFlights(flights,request.getSortCriteria())).thenReturn(flights);
-        when(flightUtil.getLimitedFlightList(request.getLimit(),flights)).thenReturn(flights);
+        when(flightSearchServiceHelper.filterResponse(any(), any())).thenReturn(flights);
+        when(flightSearchServiceHelper.sortFlights(flights,request.getSortCriteria())).thenReturn(flights);
+        when(flightSearchServiceHelper.getLimitedFlightList(request.getLimit(),flights)).thenReturn(flights);
 
         // call the method
         Collection<String> airlines = flightSearchService.searchFlights(request);

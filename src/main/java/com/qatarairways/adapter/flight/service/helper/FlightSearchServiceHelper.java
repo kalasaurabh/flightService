@@ -1,4 +1,4 @@
-package com.qatarairways.adapter.flight.util;
+package com.qatarairways.adapter.flight.service.helper;
 
 import com.qatarairways.adapter.flight.dto.FlightSearchRequestDTO;
 import com.qatarairways.adapter.flight.dto.FlightSummaryDTO;
@@ -9,13 +9,15 @@ import java.util.Comparator;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class FlightUtils {
+public class FlightSearchServiceHelper {
+
 
     private static final int DEFAULT_LIMIT = 3;
 
     private static final String DURATION = "duration";
 
     private static final String PRICE = "price";
+
     /**
      * Filters the response based on cancellation and max price.
      *
@@ -39,6 +41,7 @@ public class FlightUtils {
 
     /**
      * Limits the response based on the input provided
+     *
      * @param limit
      * @param flights
      * @return
@@ -52,6 +55,7 @@ public class FlightUtils {
 
     /**
      * Sorts the response based on the input provided
+     *
      * @param flights
      * @param sortCriteria
      * @return

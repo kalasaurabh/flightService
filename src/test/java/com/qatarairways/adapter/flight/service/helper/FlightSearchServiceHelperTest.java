@@ -1,9 +1,8 @@
-package com.qatarairways.adapter.flight.utils;
+package com.qatarairways.adapter.flight.service.helper;
 
 import com.qatarairways.adapter.flight.TestDataSetup;
 import com.qatarairways.adapter.flight.dto.FlightSearchRequestDTO;
 import com.qatarairways.adapter.flight.dto.FlightSummaryDTO;
-import com.qatarairways.adapter.flight.util.FlightUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,10 +16,10 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
-public class FlightUtilsTest extends TestDataSetup {
+public class FlightSearchServiceHelperTest extends TestDataSetup {
 
     @InjectMocks
-    private FlightUtils flightUtils;
+    private FlightSearchServiceHelper flightSearchServiceHelper;
 
     @Test
     public void test_filterFlightResponseForCancelFlights(){
@@ -35,7 +34,7 @@ public class FlightUtilsTest extends TestDataSetup {
         FlightSearchRequestDTO searchRequest = createFlightSearchRequest("NYJ", "STL", "2023-04-01", 2, true, 0.0f, null, null);
 
         // when
-        List<FlightSummaryDTO> filteredFlights = (List)flightUtils.filterResponse(flights, searchRequest);
+        List<FlightSummaryDTO> filteredFlights = (List)flightSearchServiceHelper.filterResponse(flights, searchRequest);
 
         // then
         assertThat(filteredFlights).hasSize(2);
@@ -55,7 +54,7 @@ public class FlightUtilsTest extends TestDataSetup {
         FlightSearchRequestDTO searchRequest = createFlightSearchRequest("NYJ", "STL", "2023-04-01", 2, false, 150f, null, null);
 
         // when
-        List<FlightSummaryDTO> filteredFlights = (List)flightUtils.filterResponse(flights, searchRequest);
+        List<FlightSummaryDTO> filteredFlights = (List)flightSearchServiceHelper.filterResponse(flights, searchRequest);
 
         //then
         assertThat(filteredFlights).hasSize(1);
@@ -75,7 +74,7 @@ public class FlightUtilsTest extends TestDataSetup {
         FlightSearchRequestDTO searchRequest = createFlightSearchRequest("NYJ", "STL", "2023-04-01", 2, true, 150f, null, null);
 
         //when
-        List<FlightSummaryDTO> filteredFlights = (List)flightUtils.filterResponse(flights, searchRequest);
+        List<FlightSummaryDTO> filteredFlights = (List)flightSearchServiceHelper.filterResponse(flights, searchRequest);
 
         //then
         assertThat(filteredFlights).hasSize(1);
@@ -95,7 +94,7 @@ public class FlightUtilsTest extends TestDataSetup {
         FlightSearchRequestDTO searchRequest = createFlightSearchRequest("NYJ", "STL", "2023-04-01", 2, false, 0.0f, null, null);
 
         //when
-        List filteredFlights = (List)flightUtils.filterResponse(flights, searchRequest);
+        List filteredFlights = (List)flightSearchServiceHelper.filterResponse(flights, searchRequest);
 
         //then
         assertThat(filteredFlights).hasSize(3);
@@ -112,7 +111,7 @@ public class FlightUtilsTest extends TestDataSetup {
         Collection<FlightSummaryDTO> flights = Arrays.asList(flight1, flight2, flight3,flight4);
 
         // when
-        List<FlightSummaryDTO> filteredFlights = (List)flightUtils.getLimitedFlightList(null, flights);
+        List<FlightSummaryDTO> filteredFlights = (List)flightSearchServiceHelper.getLimitedFlightList(null, flights);
 
         // then
         assertThat(filteredFlights).hasSize(3);
@@ -132,7 +131,7 @@ public class FlightUtilsTest extends TestDataSetup {
         Collection<FlightSummaryDTO> flights = Arrays.asList(flight1, flight2, flight3,flight4);
 
         // when
-        List<FlightSummaryDTO> filteredFlights = (List)flightUtils.getLimitedFlightList(2, flights);
+        List<FlightSummaryDTO> filteredFlights = (List)flightSearchServiceHelper.getLimitedFlightList(2, flights);
 
         //then
         assertThat(filteredFlights).hasSize(2);
@@ -151,7 +150,7 @@ public class FlightUtilsTest extends TestDataSetup {
         Collection<FlightSummaryDTO> flights = Arrays.asList(flight1, flight2, flight3,flight4);
 
         // when
-        List<FlightSummaryDTO> sortFlights = (List)flightUtils.sortFlights(flights, "duration");
+        List<FlightSummaryDTO> sortFlights = (List)flightSearchServiceHelper.sortFlights(flights, "duration");
 
         //then
         assertThat(sortFlights.get(0).getAirlineCode()).isEqualTo("Flight3");
@@ -171,7 +170,7 @@ public class FlightUtilsTest extends TestDataSetup {
         Collection<FlightSummaryDTO> flights = Arrays.asList(flight1, flight2, flight3,flight4);
 
         // when
-        List<FlightSummaryDTO> sortFlights = (List)flightUtils.sortFlights(flights, "price");
+        List<FlightSummaryDTO> sortFlights = (List)flightSearchServiceHelper.sortFlights(flights, "price");
 
         //then
         assertThat(sortFlights.get(0).getAirlineCode()).isEqualTo("Flight3");
@@ -191,7 +190,7 @@ public class FlightUtilsTest extends TestDataSetup {
         Collection<FlightSummaryDTO> flights = Arrays.asList(flight1, flight2, flight3,flight4);
 
         // when
-        List<FlightSummaryDTO> sortFlights = (List)flightUtils.sortFlights(flights, null);
+        List<FlightSummaryDTO> sortFlights = (List)flightSearchServiceHelper.sortFlights(flights, null);
 
         //then
         assertThat(sortFlights.get(0).getAirlineCode()).isEqualTo("Flight1");
