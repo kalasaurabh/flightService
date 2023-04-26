@@ -24,6 +24,8 @@ public class FlightAvailabilityRequest {
      * The day of departure.
      */
     @NonNull
+    //Fixme
+    //changed the date type from util date to LocalDate
     private final LocalDate departureDate;
     /**
      * The required number of seats.

@@ -111,7 +111,7 @@ public class FlightSearchServiceHelperTest extends TestDataSetup {
         Collection<FlightSummaryDTO> flights = Arrays.asList(flight1, flight2, flight3,flight4);
 
         // when
-        List<FlightSummaryDTO> filteredFlights = (List)flightSearchServiceHelper.getLimitedFlightList(null, flights);
+        List<FlightSummaryDTO> filteredFlights = (List)flightSearchServiceHelper.limitFlightList(null, flights);
 
         // then
         assertThat(filteredFlights).hasSize(3);
@@ -131,7 +131,7 @@ public class FlightSearchServiceHelperTest extends TestDataSetup {
         Collection<FlightSummaryDTO> flights = Arrays.asList(flight1, flight2, flight3,flight4);
 
         // when
-        List<FlightSummaryDTO> filteredFlights = (List)flightSearchServiceHelper.getLimitedFlightList(2, flights);
+        List<FlightSummaryDTO> filteredFlights = (List)flightSearchServiceHelper.limitFlightList(2, flights);
 
         //then
         assertThat(filteredFlights).hasSize(2);

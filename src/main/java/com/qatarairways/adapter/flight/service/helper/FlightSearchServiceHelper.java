@@ -46,7 +46,7 @@ public class FlightSearchServiceHelper {
      * @param flights
      * @return
      */
-    public Collection<FlightSummaryDTO> getLimitedFlightList(Integer limit, Collection<FlightSummaryDTO> flights) {
+    public Collection<FlightSummaryDTO> limitFlightList(Integer limit, Collection<FlightSummaryDTO> flights) {
         if (limit == null) {
             limit = DEFAULT_LIMIT;
         }

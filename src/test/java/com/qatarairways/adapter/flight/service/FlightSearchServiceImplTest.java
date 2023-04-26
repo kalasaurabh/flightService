@@ -60,7 +60,7 @@ public class FlightSearchServiceImplTest extends TestDataSetup {
         when(availabilityService.getAvailableFlights(availabilityRequest)).thenReturn(availableFlights);
         when(flightSearchServiceHelper.filterResponse(any(), any())).thenReturn(flights);
         when(flightSearchServiceHelper.sortFlights(flights,request.getSortCriteria())).thenReturn(flights);
-        when(flightSearchServiceHelper.getLimitedFlightList(request.getLimit(),flights)).thenReturn(flights);
+        when(flightSearchServiceHelper.limitFlightList(request.getLimit(),flights)).thenReturn(flights);
 
         // call the method
         Collection<String> airlines = flightSearchService.searchFlights(request);

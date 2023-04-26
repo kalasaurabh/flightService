@@ -44,7 +44,7 @@ public class FlightSearchServiceImpl implements FlightSearchService {
 
         // sorts the collection based on the sortcriteria
         flightSearchServiceHelper.sortFlights(flightSummaryDTOS, flightSearchRequestDTO.getSortCriteria());
-        flightSummaryDTOS = flightSearchServiceHelper.getLimitedFlightList(flightSearchRequestDTO.getLimit(), flightSummaryDTOS);
+        flightSummaryDTOS = flightSearchServiceHelper.limitFlightList(flightSearchRequestDTO.getLimit(), flightSummaryDTOS);
         return flightSummaryDTOS.stream().map(FlightSummaryDTO::getAirlineCode).collect(Collectors.toList());
     }
 
