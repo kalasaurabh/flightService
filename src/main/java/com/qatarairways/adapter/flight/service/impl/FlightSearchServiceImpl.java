@@ -36,8 +36,7 @@ public class FlightSearchServiceImpl implements FlightSearchService {
         // calls the external service for loading the summary of the flights
         Collection<FlightSummary> flights = flightAvailabilityService.getAvailableFlights(request);
 
-        Collection<FlightSummaryDTO> flightDTOS = flightUtil.filterResponse(toFlightDTO(flights,
-                                                flightSearchRequestDTO.getSortCriteria()), flightSearchRequestDTO);
+        Collection<FlightSummaryDTO> flightDTOS = flightUtil.filterResponse(toFlightDTO(flights),flightSearchRequestDTO);
 
         // sorts the collection based on the sortcriteria
         flightUtil.sortFlights(flightDTOS, flightSearchRequestDTO.getSortCriteria());

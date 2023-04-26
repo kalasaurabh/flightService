@@ -21,13 +21,13 @@ public class FlightSummaryMapper {
      * @param flights an instance of {@link FlightSummary}
      * @return an instance of {@link FlightSummaryDTO}
      */
-    public static Collection<FlightSummaryDTO> toFlightDTO(Collection<FlightSummary> flights, String sortCriteria) {
+    public static Collection<FlightSummaryDTO> toFlightDTO(Collection<FlightSummary> flights) {
         return flights.stream()
-                .map(flightSummary -> convertDTO(flightSummary, sortCriteria))
+                .map(FlightSummaryMapper::convertDTO)
                 .collect(Collectors.toList());
     }
 
-    private static FlightSummaryDTO convertDTO(FlightSummary flightSummary, String sortCriteria) {
+    private static FlightSummaryDTO convertDTO(FlightSummary flightSummary) {
         return FlightSummaryDTO.builder()
                 .airlineCode(flightSummary.getAirlineCode())
                 .departureTime(convertToLocalDateTime(flightSummary.getDepartureTime()))
@@ -35,7 +35,6 @@ public class FlightSummaryMapper {
                 .averagePriceInUsd(flightSummary.getAveragePriceInUsd())
                 .duration(flightSummary.getArrivalTime().getTime() - flightSummary.getDepartureTime().getTime())
                 .cancellationPossible(flightSummary.isCancellationPossible())
-                .sortCriteria(sortCriteria)
                 .build();
     }
 

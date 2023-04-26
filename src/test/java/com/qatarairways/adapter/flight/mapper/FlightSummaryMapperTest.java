@@ -24,17 +24,15 @@ public class FlightSummaryMapperTest extends TestDataSetup {
         List<FlightSummary> flights = Arrays.asList(flightSummary1, flightSummary2);
 
         // when
-        List<FlightSummaryDTO> result = (List)FlightSummaryMapper.toFlightDTO(flights, "duration");
+        List<FlightSummaryDTO> result = (List)FlightSummaryMapper.toFlightDTO(flights);
         // then
         assertThat(result.size()).isEqualTo(2);
         assertThat(result.get(0).getAirlineCode()).isEqualTo("KF");
         assertThat(result.get(0).getAveragePriceInUsd()).isEqualTo(200f);
         assertThat(result.get(0).isCancellationPossible()).isEqualTo(true);
-        assertThat(result.get(0).getSortCriteria()).isEqualTo("duration");
 
         assertThat(result.get(1).getAirlineCode()).isEqualTo("SJ");
         assertThat(result.get(1).getAveragePriceInUsd()).isEqualTo(150f);
         assertThat(result.get(1).isCancellationPossible()).isEqualTo(false);
-        assertThat(result.get(1).getSortCriteria()).isEqualTo("duration");
     }
 }
